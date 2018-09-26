@@ -1,0 +1,54 @@
+<root> ::= functions
+
+<functions> ::= function
+            | functions
+
+function ::= type-id identifier '(' parameter-declaration ')' function-body
+
+type-id ::= 'bool'
+          | 'int'
+          | 'float'
+          | 'char'
+          | 'void'
+
+parameter-declaration ::= 'void'
+                        | type-id identifier
+                        | type-id identifier ',' parameter-declaration
+
+function-body ::= '{' {expression} '}'
+
+expression ::= variable-declaration
+             | if-expression
+             | while-expression
+             | jump-expression
+
+variable-declaration ::= type-id identifier ';'
+                       | type-id identifier '=' variable-value ';'
+
+
+if-expression ::= 'if' '(' condition ')' '{' {expression} '}'
+                | 'if' '(' condition ')' '{' {expression} '}' 'else' '{' {expression} '}'
+while-expression ::= 'while' '(' condition ')' '{' expression '}'
+
+condition ::= (identifier | variable-value) logic-op (identifier | variable-value)
+
+logic-op ::= '=='
+           | '!='
+           | '<'
+           | '>'
+           | '<='
+           | '>='
+
+jump-expression ::= 'goto' identifier ';'
+                  | 'continue' ';'
+                  | 'break' ';'
+                  | 'return' (expression | identifier | variable-value) ';'
+
+identifier ::= #"([a-zA-Z_][a-zA-Z0-9_]*)"
+
+variable-value ::= #"[0-9]"
+                 | #"[a-zA-Z_]"
+                 | #"[a-fA-F0-9]"
+                 | #"([^'\\\n]|\\.)"
+                 | #"[+-]?([0-9]*[.])?[0-9]+"
+                 | #"\"([^\\\"]|\\.)*\""
