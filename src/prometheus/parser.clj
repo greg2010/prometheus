@@ -10,6 +10,6 @@
   (let
     [parser (insta/parser grammar :input-format :ebnf :auto-whitespace :standard)
      tree (parser file)]
-    tree))
+    (if (insta/failure? tree) (println (str "Failed to parse tree: " tree)) tree)))
 
 (defn visualize-tree! [tree] (insta/visualize tree))

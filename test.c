@@ -1,4 +1,4 @@
-int main(void) {
+int main(int agrc) {
     int a = 1;
     if (a > 0) {
         return 0;
