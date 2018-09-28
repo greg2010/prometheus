@@ -30,7 +30,7 @@ if-expression ::= 'if' '(' condition ')' '{' {expression} '}'
                 | 'if' '(' condition ')' '{' {expression} '}' 'else' '{' {expression} '}'
 while-expression ::= 'while' '(' condition ')' '{' expression '}'
 
-condition ::= (identifier | variable-value) logic-op (identifier | variable-value)
+condition ::= (identifier | variable-value | condition) logic-op (identifier | variable-value | condition)
 
 logic-op ::= '=='
            | '!='
@@ -42,7 +42,7 @@ logic-op ::= '=='
 jump-expression ::= 'goto' identifier ';'
                   | 'continue' ';'
                   | 'break' ';'
-                  | 'return' (expression | identifier | variable-value) ';'
+                  | 'return' (expression | identifier | variable-value)? ';'
 
 identifier ::= #"([a-zA-Z_][a-zA-Z0-9_]*)"
 

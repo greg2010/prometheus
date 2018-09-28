@@ -1,15 +1,15 @@
 (ns prometheus.parser
-  (:require [instaparse.core :as insta]))
+  (:require [instaparse.core :as insta]
+            [clojure.java.io :as io]))
 
 
-(def whitespace
-  (insta/parser
-    "whitespace = #'\\s+'"))
+(def ^{:private true} grammar (io/resource "c.ebnf"))
 
 
-(defn parse-file [file grammar]
+(defn parse-file [file]
   (let
-    [parser (insta/parser grammar :input-format :ebnf :auto-whitespace whitespace)
+    [parser (insta/parser grammar :input-format :ebnf :auto-whitespace :standard)
      tree (parser file)]
-    (insta/visualize tree)
     tree))
+
+(defn visualize-tree! [tree] (insta/visualize tree))
