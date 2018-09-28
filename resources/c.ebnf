@@ -25,9 +25,15 @@ expression-group ::= <'{'> {expression} <'}'>
 variable-declaration ::= type-id identifier <';'>
                        | type-id identifier <'='> variable-value <';'>
 
+if-expression ::= if-condition expression-group
+                | if-condition expression-group else-expression
 
-if-expression ::= <'if'> <'('> condition <')'> expression-group
-                | <'if'> <'('> condition <')'> expression-group <'else'> expression-group
+else-expression ::= <'else'> expression-group
+                  | <'else'> if-condition expression-group
+                  | <'else'> if-condition expression-group else-expression
+
+if-condition ::=  <'if'> <'('> condition <')'>
+
 while-expression ::= <'while'> <'('> condition <')'> expression-group
 
 condition ::= (identifier | variable-value | condition) logic-op (identifier | variable-value | condition)

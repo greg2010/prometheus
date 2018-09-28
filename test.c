@@ -4,9 +4,14 @@ int main(int agrc) {
         int b = 2;
         break;
     }
-    if (a > 0) {
+
+    if (a > 1) {
         return 0;
+    } else if (a > 2) {
+        return 0;
+    } else if (a > 3) {
+	return 0;
     } else {
-        return 1;
+	return 1;
     }
 }

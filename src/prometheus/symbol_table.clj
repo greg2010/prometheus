@@ -4,14 +4,15 @@
 (defn get-symbol-name [symbol] (second symbol))
 (defn gen-scope [name parent] {:name name :parent parent})
 
-(defn rand-scope-name [] (apply str (take 5 (repeatedly #(char (+ (rand 26) 65))))))
-
+(defn rand-scope-name []
+  (apply str (take 5 (repeatedly #(char (+ (rand 26) 65))))))
 
 (defmulti ^{:private true} gen-table (fn [scope tree] (first tree)))
 
 (defmethod gen-table
   :root
-  [scope tree] (remove empty? (flatten (map (partial gen-table scope) (rest tree)))))
+  [scope tree]
+  (remove empty? (flatten (map (partial gen-table scope) (rest tree)))))
 
 (defmethod gen-table
   :function
@@ -45,9 +46,14 @@
   (gen-table scope (nth tree 2)))
 
 (defmethod gen-table
-  :if-expression
+  :if-condition
   [scope tree]
-  (map (partial gen-table scope) (drop 2 tree)))
+  (gen-table scope (nth 2 tree)))
+
+(defmethod gen-table
+  :else-expression
+  [scope tree]
+  (map (partial gen-table scope) (rest tree)))
 
 (defmethod gen-table
   :while-expression
@@ -56,7 +62,8 @@
 
 (defmethod gen-table
   :identifier
-  [scope tree] {:symbol (get-symbol-name tree) :scope scope})
+  [scope tree]
+  {:symbol (get-symbol-name tree) :scope scope})
 
 (defmethod gen-table
   :default [scope tree] {})
