@@ -50,6 +50,11 @@
   (map (partial gen-table scope) (drop 2 tree)))
 
 (defmethod gen-table
+  :while-expression
+  [scope tree]
+  (gen-table scope (nth tree 2)))
+
+(defmethod gen-table
   :identifier
   [scope tree] {:symbol (get-symbol-name tree) :scope scope})
 
