@@ -22,6 +22,8 @@ parameter-declaration ::= 'void'
 
 expression-group ::= <'{'> {expression} <'}'>
 
+
+
 variable-declaration ::= type-id identifier <';'>
                        | type-id identifier <'='> variable-value <';'>
 
@@ -32,11 +34,14 @@ else-expression ::= <'else'> expression-group
                   | <'else'> if-condition expression-group
                   | <'else'> if-condition expression-group else-expression
 
-if-condition ::=  <'if'> <'('> condition <')'>
+if-condition ::=  <'if'> <'('> condition-group <')'>
 
-while-expression ::= <'while'> <'('> condition <')'> expression-group
+while-expression ::= <'while'> <'('> condition-group <')'> expression-group
 
-condition ::= (identifier | variable-value | condition) logic-op (identifier | variable-value | condition)
+condition-group ::= condition
+                  | condition connector-op condition
+
+<condition> ::= (identifier | variable-value) logic-op (identifier | variable-value)
 
 logic-op ::= '=='
            | '!='
@@ -44,6 +49,9 @@ logic-op ::= '=='
            | '>'
            | '<='
            | '>='
+
+connector-op ::= '&&'
+               | '||'
 
 jump-expression ::= 'goto' identifier <';'>
                   | 'continue' <';'>

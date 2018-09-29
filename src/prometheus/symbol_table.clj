@@ -1,8 +1,10 @@
 (ns prometheus.symbol-table)
 
+(defrecord Scope [name parent])
+
 
 (defn get-symbol-name [symbol] (second symbol))
-(defn gen-scope [name parent] {:name name :parent parent})
+(defn gen-scope [name parent] (->Scope name ^Scope parent))
 
 (defn rand-scope-name []
   (apply str (take 5 (repeatedly #(char (+ (rand 26) 65))))))
@@ -12,7 +14,7 @@
 (defmethod gen-table
   :root
   [scope tree]
-  (remove empty? (flatten (map (partial gen-table scope) (rest tree)))))
+  (remove nil? (flatten (map (partial gen-table scope) (rest tree)))))
 
 (defmethod gen-table
   :function
@@ -21,8 +23,8 @@
         parameter-declaration (nth tree 3)
         function-body (nth tree 4)
         fn-scope (gen-scope (get-symbol-name identifier) scope)]
-    (seq [(gen-table scope identifier)
-          (gen-table fn-scope parameter-declaration)
+    (seq [(assoc (gen-table scope identifier) :type :function)
+          (map #(if (not (nil? %)) (assoc % :type :parameter)) (gen-table fn-scope parameter-declaration))
           (gen-table fn-scope function-body)])))
 
 (defmethod gen-table
@@ -46,9 +48,9 @@
   (gen-table scope (nth tree 2)))
 
 (defmethod gen-table
-  :if-condition
+  :if-expression
   [scope tree]
-  (gen-table scope (nth 2 tree)))
+  (map (partial gen-table scope) (rest tree)))
 
 (defmethod gen-table
   :else-expression
@@ -63,10 +65,10 @@
 (defmethod gen-table
   :identifier
   [scope tree]
-  {:symbol (get-symbol-name tree) :scope scope})
+  {:symbol (get-symbol-name tree) :scope scope :type :variable})
 
 (defmethod gen-table
-  :default [scope tree] {})
+  :default [scope tree] nil)
 
 
-(defn generate-symbol-table [tree] (gen-table (gen-scope "global" []) tree))
+(defn generate-symbol-table [tree] (gen-table (gen-scope "global" nil) tree))
