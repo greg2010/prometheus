@@ -31,17 +31,18 @@ if-expression ::= if-condition expression-group
                 | if-condition expression-group else-expression
 
 else-expression ::= <'else'> expression-group
-                  | <'else'> if-condition expression-group
-                  | <'else'> if-condition expression-group else-expression
+                    | <'else'> if-condition expression-group
+                    | <'else'> if-condition expression-group else-expression
 
 if-condition ::=  <'if'> <'('> condition-group <')'>
 
 while-expression ::= <'while'> <'('> condition-group <')'> expression-group
 
 condition-group ::= condition
-                  | condition connector-op condition
+                  | (condition | condition-group) connector-op (condition | condition-group)
 
-<condition> ::= (identifier | variable-value) logic-op (identifier | variable-value)
+<condition> ::= (boolean-value | identifier | variable-value)
+              | (boolean-value | identifier | variable-value) logic-op (boolean-value | identifier | variable-value)
 
 logic-op ::= '=='
            | '!='
@@ -66,3 +67,5 @@ variable-value ::= #"[0-9]"
                  | #"([^'\\\n]|\\.)"
                  | #"[+-]?([0-9]*[.])?[0-9]+"
                  | #"\"([^\\\"]|\\.)*\""
+
+boolean-value ::= "true" | "false"

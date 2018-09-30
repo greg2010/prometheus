@@ -6,7 +6,7 @@
 (defn get-symbol-name [symbol] (second symbol))
 (defn gen-scope [name parent] (->Scope name ^Scope parent))
 
-(defn rand-scope-name []
+(defn rand-name []
   (apply str (take 5 (repeatedly #(char (+ (rand 26) 65))))))
 
 (defmulti ^{:private true} gen-table (fn [scope tree] (first tree)))
@@ -37,7 +37,7 @@
 (defmethod gen-table
   :expression-group
   [scope tree]
-  (let [group-scope (gen-scope (rand-scope-name) scope)
+  (let [group-scope (gen-scope (rand-name) scope)
         body-vec (rest tree)]
     (map (partial gen-table group-scope) body-vec)))
 
