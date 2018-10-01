@@ -1,0 +1,71 @@
+root ::= functions
+
+<functions> ::= function
+            | functions
+
+function ::= type-id identifier <'('> parameter-declaration <')'> expression-group
+
+type-id ::= 'bool'
+          | 'int'
+          | 'float'
+          | 'char'
+          | 'void'
+
+parameter-declaration ::= 'void'
+                        | type-id identifier
+                        | type-id identifier <','> parameter-declaration
+
+<expression> ::= variable-declaration
+               | if-expression
+               | while-expression
+               | jump-expression
+
+expression-group ::= <'{'> {expression} <'}'>
+
+
+
+variable-declaration ::= type-id identifier <';'>
+                       | type-id identifier <'='> variable-value <';'>
+
+if-expression ::= if-condition expression-group
+                | if-condition expression-group else-expression
+
+else-expression ::= <'else'> expression-group
+                    | <'else'> if-condition expression-group
+                    | <'else'> if-condition expression-group else-expression
+
+if-condition ::=  <'if'> <'('> condition-group <')'>
+
+while-expression ::= <'while'> <'('> condition-group <')'> expression-group
+
+condition-group ::= condition
+                  | (condition | condition-group) connector-op (condition | condition-group)
+
+<condition> ::= (boolean-value | identifier | variable-value)
+              | (boolean-value | identifier | variable-value) logic-op (boolean-value | identifier | variable-value)
+
+logic-op ::= '=='
+           | '!='
+           | '<'
+           | '>'
+           | '<='
+           | '>='
+
+connector-op ::= '&&'
+               | '||'
+
+jump-expression ::= 'goto' identifier <';'>
+                  | 'continue' <';'>
+                  | 'break' <';'>
+                  | 'return' (expression | expression-group | identifier | variable-value)? <';'>
+
+identifier ::= #"([a-zA-Z_][a-zA-Z0-9_]*)"
+
+variable-value ::= #"[0-9]"
+                 | #"[a-zA-Z_]"
+                 | #"[a-fA-F0-9]"
+                 | #"([^'\\\n]|\\.)"
+                 | #"[+-]?([0-9]*[.])?[0-9]+"
+                 | #"\"([^\\\"]|\\.)*\""
+
+boolean-value ::= "true" | "false"
