@@ -3,7 +3,8 @@
     [prometheus.parser :as p]
     [prometheus.analyzer :as a]
     [prometheus.generator :as g]
-    [clojure.pprint ])
+    [prometheus.control-flow :as cf]
+    [clojure.pprint])
   (:gen-class))
 
 (defn -main
@@ -12,6 +13,7 @@
   (let [src (slurp (first args))
         tree (p/parse-file src)
         symbol-table (a/analyze-tree tree)
+        control-flow (cf/generate-control-flow tree)
         register-map (g/alloc-registers symbol-table)
         code (g/gen-code symbol-table tree)]
     (println "Source:")
@@ -20,6 +22,7 @@
     (clojure.pprint/pprint tree)
     (println "Generated symbol table:")
     (clojure.pprint/pprint symbol-table)
-    (clojure.pprint/pprint register-map)
-    (clojure.pprint/pprint code)
+    (clojure.pprint/pprint control-flow)
+    ;(clojure.pprint/pprint register-map)
+    ;(clojure.pprint/pprint code)
     (if (second args) (p/visualize-tree! tree))))

@@ -5,6 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [instaparse "1.4.9"]
+                 [ubergraph "0.5.1"]
                  [rhizome "0.2.9"]]
   :main ^:skip-aot prometheus.core
   :target-path "target/%s"

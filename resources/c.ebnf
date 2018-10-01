@@ -16,9 +16,9 @@ parameter-declaration ::= 'void'
                         | type-id identifier <','> parameter-declaration
 
 <expression> ::= variable-declaration
-             | if-expression
-             | while-expression
-             | jump-expression
+               | if-expression
+               | while-expression
+               | jump-expression
 
 expression-group ::= <'{'> {expression} <'}'>
 
